@@ -1,5 +1,8 @@
 <?php
     include "../koneksi.php";
+    
+    $query = mysqli_query($con, "SELECT * FROM config WHERE id =  1");
+    $data_config = mysqli_fetch_object($query);
 ?>
 
 <!doctype html>
@@ -296,7 +299,14 @@
         </div>
       </div>
 
+      <?php
+        if($data_config->enable_ajax_ip == 1){
+        ?>
       <div style="position:absolute; bottom:2px; right:5px; font-size:12px;font-weight:500;color:#444444;"><div id="ip"></div></div>
+      
+      <?php
+      }
+      ?>
     </div>
 
     <script src="/js/bootstrap.bundle.min.js"></script>
@@ -329,12 +339,18 @@
         document.getElementById("jam").innerHTML = currentdate.getHours() + ":" + (currentdate.getMinutes() < 10 ? "0" : "") + currentdate.getMinutes() + ":" + (currentdate.getSeconds() < 10 ? "0" : "") + currentdate.getSeconds();
         document.getElementById("tanggal").innerHTML = currentdate.getDate() + " " + month[currentdate.getMonth()] + " " + currentdate.getFullYear();
         
+        <?php
+        if($data_config->enable_ajax_ip == 1){
+        ?>
+
         const xhttp = new XMLHttpRequest();
         xhttp.onload = function() {
           document.getElementById("ip").innerHTML = this.responseText;
           }
         xhttp.open("GET", "/getip.php", true);
         xhttp.send();
+        
+        <?php } ?>
         // run_iframe();
       }
       
