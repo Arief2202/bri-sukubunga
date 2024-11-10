@@ -3,6 +3,7 @@
     
     $query = mysqli_query($con, "SELECT * FROM config WHERE id =  1");
     $data_config = mysqli_fetch_object($query);
+    
 ?>
 
 <!doctype html>
@@ -22,16 +23,16 @@
       }
       .video-desc {
         display: block;
-        width: 90%;
-        overflow: hidden;
+        width: 100%;
+        /* overflow: hidden; */
         white-space: nowrap;
-        text-overflow: ellipsis;
-        font-size:12px;
+        /* text-overflow: ellipsis; */
+        font-size:3vw;
         font-weight:500;
         color:white;
-      }
+      } 
       .title-page {
-        font-size:20px;
+        font-size:5vw;
         font-weight:700;
         color:white;
       }
@@ -42,7 +43,11 @@
         padding: 0;
         margin: 0;
       }
+      .table tbody tr th{
+        font-size: 4vw;
+      }
       .table tbody tr td{
+        font-size: 4vw;
         font-weight: 700;
       }
       .table tbody tr:nth-child(odd) {
@@ -57,26 +62,33 @@
         border-radius: 4px;
         display: inline-block;
       }
+
+      .content-title{
+        font-size: 2.2vw;
+      }
+      .content-value{
+        font-size: 2.2vw;
+      }
     </style>
   </head>
   <body>
-    <div class="container">
+    <div class="container w-100">
 
       <div class="row mt-2">
         <div class="col-7">
-          <img src="/img/logo_bri.png" width="100%" alt="">
+          <img src="/img/logo_bri.png" alt="" style="width:43vw;">
         </div>
         <div class="col-5 p-0 m-0">
           <div class="me-2 ps-2 pe-2 pt-1 pb-1" style="background-color:#ffff2f;border-radius:10px;">
             <div class="row">
               <div class="col-12">
                 <div class="d-flex justify-content-center">
-                  <div id="jam" style="font-size:20px; font-weight:700;"></div>
+                  <div id="jam" style="font-size:4vw; font-weight:700;"></div>
                 </div>
               </div>
               <div class="col-12">
                 <div class="d-flex justify-content-center">
-                  <div id="tanggal" style="font-size:14px; font-weight:700;"></div>
+                  <div id="tanggal" style="font-size:3vw; font-weight:700;"></div>
                 </div>
               </div>
             </div>
@@ -88,8 +100,12 @@
         <!-- <iframe style="width: 100%; aspect-ratio: 16 / 9;" src="https://www.youtube.com/embed/ZqpHojVtVCE?playlist=ZqpHojVtVCE&showinfo=0&autohide=1&loop=1" allow="autoplay; encrypted-media" frameborder="0" id="youtube-video"></iframe> -->
           <div class="autoplay"></div>
       </div>
-      <div class="w-100 p-1" style="background-color:#6e91b1; border-radius:5px;">
-        <span class="video-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod minima ab hic recusandae. Laboriosam numquam facere alias debitis natus ipsum quae perferendis quibusdam quidem, ab odit! Laudantium odio autem veniam non doloremque aliquam, voluptate ex, incidunt repellat suscipit unde nostrum ipsam sint deserunt ea doloribus molestias quasi aut vero provident accusantium perspiciatis dolorum assumenda aperiam. Consectetur earum doloribus voluptatum consequuntur harum ea fuga maiores reprehenderit minima. Tempora excepturi, iusto magnam accusamus laboriosam ipsam aliquam illum, aperiam velit iste harum nam doloribus voluptatem facere, ducimus voluptates quibusdam. Officia excepturi eius, blanditiis voluptatum reprehenderit sit esse quis tempore dicta, voluptatem consequatur aspernatur.</span>
+
+      <div class="w-100 mt-2 p-1" style="background-color:#6e91b1; border-radius:5px;" id="scroll-container">
+        <marquee scrollamount="10" class="video-desc">
+          <!-- Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod minima ab hic recusandae. Laboriosam numquam facere alias debitis natus ipsum quae perferendis quibusdam quidem, ab odit! Laudantium odio autem veniam non doloremque aliquam, voluptate ex, incidunt repellat suscipit unde nostrum ipsam sint deserunt ea doloribus molestias quasi aut vero provident accusantium perspiciatis dolorum assumenda aperiam. Consectetur earum doloribus voluptatum consequuntur harum ea fuga maiores reprehenderit minima. Tempora excepturi, iusto magnam accusamus laboriosam ipsam aliquam illum, aperiam velit iste harum nam doloribus voluptatem facere, ducimus voluptates quibusdam. Officia excepturi eius, blanditiis voluptatum reprehenderit sit esse quis tempore dicta, voluptatem consequatur aspernatur. -->
+          KANTOR CABANG BRI PARE KEDIRI
+        </marquee>
       </div>
 
       <div class="mt-1">
@@ -110,12 +126,14 @@
                 <div class="col-6 d-flex justify-content-center m-0 ps-1 pe-1">
                   <div class="row p-1 mt-2 pe-0" style="font-size:8.5px; color:white; background-color:#6e91b1; border-radius:5px; width:100%">
 
-                    <div class="col-5 row">
+                    <div class="col-4 row mt-1">
                       <div class="col-12 p-0 m-0">
-                          <img src="/img/flag/<?=$currency->flag?>" style="width:40px;" alt="">
+                        <div class="d-flex justify-content-center">
+                            <img src="/img/flag/<?=$currency->flag?>" style="width:8vw;" alt="">
+                        </div>
                       </div>
-                      <div class="col-12 p-0 m-0" style="font-size:12px; font-weight:700;">
-                        <div class="d-flex justify-content-center me-1">
+                      <div class="col-12 p-0 m-0" style="font-size:3vw; font-weight:700;">
+                        <div class="d-flex justify-content-center">
                           <?=$currency->currency?>
                         </div>
                       </div>
@@ -126,11 +144,11 @@
                     <div class="row ps-3 pe-0 w-100">
                       <div class="col-12 p-0 m-0">
                         <div class="row p-0 m-0">
-                          <div class="col-6 p-0 m-0">
+                          <div class="col-6 p-0 m-0 content-title">
                             Nilai / Value
                           </div>
                           <div class="col-6 p-0 m-0">
-                            <div class="d-flex justify-content-end">
+                            <div class="d-flex justify-content-end content-value">
                             <?=$currency->value?>
                             </div>
                           </div>
@@ -138,11 +156,11 @@
                       </div>
                       <div class="col-12 p-0 m-0">
                         <div class="row p-0 m-0">
-                          <div class="col-6 p-0 m-0">
+                          <div class="col-6 p-0 m-0 content-title">
                             Beli / Buy
                           </div>
                           <div class="col-6 p-0 m-0">
-                            <div class="d-flex justify-content-end">
+                            <div class="d-flex justify-content-end content-value">
                             Rp. <?=number_format($currency->buy, 2, ',', '.');?>
                             </div>
                           </div>
@@ -150,11 +168,11 @@
                       </div>
                       <div class="col-12 p-0 m-0">
                         <div class="row p-0 m-0">
-                          <div class="col-6 p-0 m-0">
+                          <div class="col-6 p-0 m-0 content-title">
                             Jual / Sell
                           </div>
                           <div class="col-6 p-0 m-0">
-                            <div class="d-flex justify-content-end">
+                            <div class="d-flex justify-content-end content-value">
                             Rp. <?=number_format($currency->sell, 2, ',', '.');?>
                             </div>
                           </div>
@@ -175,10 +193,10 @@
                 
                 <div class="w-100 p-0 mt-3" style="background-color:#6e91b1; border-radius:5px;">
                   <div class="row ps-2 pe-2 pt-1">
-                    <div class="col-6" style="color:#233d90; font-size:22px; font-weight:800;">
+                    <div class="col-6" style="color:#233d90; font-size:5vw; font-weight:800;">
                       Deposito
                     </div>
-                    <div class="col-6 d-flex justify-content-end" style="color:#233d90; font-size:22px; font-weight:800;">
+                    <div class="col-6 d-flex justify-content-end" style="color:#233d90; font-size:5vw; font-weight:800;">
                       Rupiah
                     </div>
                   </div>
@@ -217,12 +235,9 @@
                 
                 <div class="w-100 p-0 mt-3" style="background-color:#6e91b1; border-radius:5px;">
                   <div class="row ps-2 pe-2 pt-1">
-                    <div class="col-6" style="color:#233d90; font-size:22px; font-weight:800;">
-                      Britama
+                    <div class="col-6 p-2 ps-3">
+                        <img src="/img/britama.png" alt="" style="width:30vw;">
                     </div>
-                    <!-- <div class="col-6 d-flex justify-content-end" style="color:#233d90; font-size:22px; font-weight:800;">
-                      Rupiah
-                    </div> -->
                   </div>
                   <table class="table mt-2" style="width: 100%;">
                     <tbody>
@@ -259,12 +274,9 @@
                 
                 <div class="w-100 p-0 mt-3" style="background-color:#6e91b1; border-radius:5px;">
                   <div class="row ps-2 pe-2 pt-1">
-                    <div class="col-6" style="color:#233d90; font-size:22px; font-weight:800;">
-                      Simpedes
+                    <div class="col-6 ps-3 pt-3 pb-1">
+                        <img src="/img/simpedes.png" alt="" style="width:30vw;">
                     </div>
-                    <!-- <div class="col-6 d-flex justify-content-end" style="color:#233d90; font-size:22px; font-weight:800;">
-                      Rupiah
-                    </div> -->
                   </div>
                   <table class="table mt-2" style="width: 100%;">
                     <tbody>
@@ -302,7 +314,7 @@
       <?php
         if($data_config->enable_ajax_ip == 1){
         ?>
-      <div style="position:absolute; bottom:2px; right:5px; font-size:12px;font-weight:500;color:#444444;"><div id="ip"></div></div>
+      <div style="position:absolute; bottom:2px; right:5px; font-size:2vw;font-weight:500;color:#555555;"><div id="ip"></div></div>
       
       <?php
       }
@@ -328,7 +340,7 @@
         // }
       });
     
-    function run_iframe(){        
+      function run_iframe(){        
         document.querySelector('.autoplay').appendChild(iframe);
       }
 
