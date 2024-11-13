@@ -1,9 +1,23 @@
 <?php
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+      $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    if($ip != "::1" && $ip != "127.0.0.1"){
+      http_response_code(404);
+      die;
+    }
+
     include "../koneksi.php";
-    
     $query = mysqli_query($con, "SELECT * FROM config WHERE id =  1");
     $data_config = mysqli_fetch_object($query);
     
+    $depositos_query = mysqli_query($con, "SELECT * FROM suku_bunga WHERE section = 'deposito'");
+    $simpedes_query = mysqli_query($con, "SELECT * FROM suku_bunga WHERE section = 'simpedes'");    
+    $britama_query = mysqli_query($con, "SELECT * FROM suku_bunga WHERE section = 'britama'");
 ?>
 
 <!doctype html>
@@ -21,7 +35,7 @@
         background-position: center;
         background-attachment: fixed;
       }
-      .video-desc {
+      .running-text {
         display: block;
         width: 100%;
         /* overflow: hidden; */
@@ -98,14 +112,11 @@
 
       <div class="mt-2" style="overflow:hidden;border-radius:10px;border-bottom-left-radius: 20px;border-bottom-right-radius: 20px;">
         <!-- <iframe style="width: 100%; aspect-ratio: 16 / 9;" src="https://www.youtube.com/embed/ZqpHojVtVCE?playlist=ZqpHojVtVCE&showinfo=0&autohide=1&loop=1" allow="autoplay; encrypted-media" frameborder="0" id="youtube-video"></iframe> -->
-          <div class="autoplay"></div>
+          <div class="videoSection" id="videoSection"></div>
       </div>
 
       <div class="w-100 mt-2 p-1" style="background-color:#6e91b1; border-radius:5px;" id="scroll-container">
-        <marquee scrollamount="10" class="video-desc">
-          <!-- Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod minima ab hic recusandae. Laboriosam numquam facere alias debitis natus ipsum quae perferendis quibusdam quidem, ab odit! Laudantium odio autem veniam non doloremque aliquam, voluptate ex, incidunt repellat suscipit unde nostrum ipsam sint deserunt ea doloribus molestias quasi aut vero provident accusantium perspiciatis dolorum assumenda aperiam. Consectetur earum doloribus voluptatum consequuntur harum ea fuga maiores reprehenderit minima. Tempora excepturi, iusto magnam accusamus laboriosam ipsam aliquam illum, aperiam velit iste harum nam doloribus voluptatem facere, ducimus voluptates quibusdam. Officia excepturi eius, blanditiis voluptatum reprehenderit sit esse quis tempore dicta, voluptatem consequatur aspernatur. -->
-          KANTOR CABANG BRI PARE KEDIRI
-        </marquee>
+        <marquee scrollamount="10" class="running-text"><?=$data_config->running_text?></marquee>
       </div>
 
       <div class="mt-1">
@@ -129,11 +140,11 @@
                     <div class="col-4 row mt-1">
                       <div class="col-12 p-0 m-0">
                         <div class="d-flex justify-content-center">
-                            <img src="/img/flag/<?=$currency->flag?>" style="width:8vw;" alt="">
+                            <img class="exchange-rate-flag" src="/img/flag/<?=$currency->flag?>" style="width:8vw;" alt="">
                         </div>
                       </div>
                       <div class="col-12 p-0 m-0" style="font-size:3vw; font-weight:700;">
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center exchange-rate-currency">
                           <?=$currency->currency?>
                         </div>
                       </div>
@@ -148,7 +159,7 @@
                             Nilai / Value
                           </div>
                           <div class="col-6 p-0 m-0">
-                            <div class="d-flex justify-content-end content-value">
+                            <div class="d-flex justify-content-end content-value exchange-rate-value">
                             <?=$currency->value?>
                             </div>
                           </div>
@@ -160,7 +171,7 @@
                             Beli / Buy
                           </div>
                           <div class="col-6 p-0 m-0">
-                            <div class="d-flex justify-content-end content-value">
+                            <div class="d-flex justify-content-end content-value exchange-rate-buy">
                             Rp. <?=number_format($currency->buy, 2, ',', '.');?>
                             </div>
                           </div>
@@ -172,7 +183,7 @@
                             Jual / Sell
                           </div>
                           <div class="col-6 p-0 m-0">
-                            <div class="d-flex justify-content-end content-value">
+                            <div class="d-flex justify-content-end content-value exchange-rate-sell">
                             Rp. <?=number_format($currency->sell, 2, ',', '.');?>
                             </div>
                           </div>
@@ -202,26 +213,12 @@
                   </div>
                   <table class="table mt-2" style="width: 100%;">
                     <tbody>
+                      <?php while($dat = mysqli_fetch_object($depositos_query)) { ?>
                       <tr>
-                        <th class="ps-3">1 Bulan</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
+                        <th class="ps-3 deposito-label"><?=$dat->label?></th>
+                        <td class="d-flex justify-content-end pe-3 deposito-value"><?=$dat->value?></td>
                       </tr>
-                      <tr>
-                      <th class="ps-3">3 Bulan</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
-                      </tr>
-                      <tr>
-                      <th class="ps-3">6 Bulan</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
-                      </tr>
-                      <tr>
-                      <th class="ps-3">12 Bulan</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
-                      </tr>
-                      <tr>
-                      <th class="ps-3">24 Bulan</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
-                      </tr>
+                      <?php } ?>
                     </tbody>
                   </table>
                 </div>
@@ -241,26 +238,12 @@
                   </div>
                   <table class="table mt-2" style="width: 100%;">
                     <tbody>
+                      <?php while($dat = mysqli_fetch_object($britama_query)) { ?>
                       <tr>
-                        <th class="ps-3">0 S/D 1 JUTA </th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
+                        <th class="ps-3 britama-label"><?=$dat->label?></th>
+                        <td class="d-flex justify-content-end pe-3 britama-value"><?=$dat->value?></td>
                       </tr>
-                      <tr>
-                      <th class="ps-3">> 1 JUTA S/D 50 JUTA</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
-                      </tr>
-                      <tr>
-                      <th class="ps-3">> 50 JUTA S/D < 500 JUTA</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
-                      </tr>
-                      <tr>
-                      <th class="ps-3">> 500 JUTA S/D 1 MILYAR</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
-                      </tr>
-                      <tr>
-                      <th class="ps-3">> 1 MILYAR</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
-                      </tr>
+                      <?php } ?>
                     </tbody>
                   </table>
                 </div>
@@ -280,26 +263,12 @@
                   </div>
                   <table class="table mt-2" style="width: 100%;">
                     <tbody>
+                      <?php while($dat = mysqli_fetch_object($simpedes_query)) { ?>
                       <tr>
-                        <th class="ps-3">0 S/D 1 JUTA </th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
+                        <th class="ps-3 simpedes-label"><?=$dat->label?></th>
+                        <td class="d-flex justify-content-end pe-3 simpedes-value"><?=$dat->value?></td>
                       </tr>
-                      <tr>
-                      <th class="ps-3">> 1 JUTA S/D 50 JUTA</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
-                      </tr>
-                      <tr>
-                      <th class="ps-3">> 50 JUTA S/D < 500 JUTA</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
-                      </tr>
-                      <tr>
-                      <th class="ps-3">> 500 JUTA S/D 1 MILYAR</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
-                      </tr>
-                      <tr>
-                      <th class="ps-3">> 1 MILYAR</th>
-                        <td class="d-flex justify-content-end pe-3">3,35 %</td>
-                      </tr>
+                      <?php } ?>
                     </tbody>
                   </table>
                 </div>
@@ -324,49 +293,96 @@
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="/js/jquery-3.7.1.min.js"></script>
     <script>
-      
-      var iframe = null;
-      iframe = document.createElement('iframe');
-      iframe.setAttribute('src', `https://www.youtube.com/embed/ZqpHojVtVCE?autoplay=1&playlist=ZqpHojVtVCE&showinfo=0&autohide=1&loop=1`);
-      iframe.setAttribute('frameborder', '0');
-      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
-      iframe.setAttribute('allowfullscreen', '');
-      iframe.setAttribute('style', 'width: 100%; aspect-ratio: 16 / 9;');
-      document.querySelector('.autoplay').appendChild(iframe);
+      function formatMoney(amount, decimalCount = 2, decimal = ",", thousands = ".") {
+        try {
+          decimalCount = Math.abs(decimalCount);
+          decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+
+          const negativeSign = amount < 0 ? "-" : "";
+
+          let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+          let j = (i.length > 3) ? i.length % 3 : 0;
+
+          return "Rp. " + negativeSign +
+            (j ? i.substr(0, j) + thousands : '') +
+            i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) +
+            (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+        } catch (e) {
+          console.log(e)
+        }
+      };
+
+      var video_id = "<?=$data_config->video_id?>";
+      var playlist_id = "<?=$data_config->playlist_id?>";
+
   
       document.addEventListener("keypress", function(event) {
-        // if(iframe == null){
-          run_iframe();
-        // }
+        run_iframe(video_id, playlist_id);
       });
     
-      function run_iframe(){        
-        document.querySelector('.autoplay').appendChild(iframe);
+      function run_iframe(video_id, playlist_id){        
+        const list = document.querySelector('.videoSection');
+        while (list.hasChildNodes()) {
+          list.removeChild(list.firstChild);
+        }        
+        var iframe = null;
+        iframe = document.createElement('iframe');
+        iframe.setAttribute('src', 'https://www.youtube.com/embed/' + video_id + '?autoplay=1&' + playlist_id + '&showinfo=0&autohide=1&loop=1');
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('style', 'width: 100%; aspect-ratio: 16 / 9;');
+        list.appendChild(iframe);
       }
 
-      updateTime();
-      function updateTime(){
-        var currentdate = new Date();
-        var month = ["Januari", "Februari",  "Maret",  "April",  "Mei",  "Juni",  "Juli",  "Agustus",  "September",  "Oktober",  "November",  "Desember"];
-        document.getElementById("jam").innerHTML = currentdate.getHours() + ":" + (currentdate.getMinutes() < 10 ? "0" : "") + currentdate.getMinutes() + ":" + (currentdate.getSeconds() < 10 ? "0" : "") + currentdate.getSeconds();
-        document.getElementById("tanggal").innerHTML = currentdate.getDate() + " " + month[currentdate.getMonth()] + " " + currentdate.getFullYear();
-        
-        <?php
-        if($data_config->enable_ajax_ip == 1){
-        ?>
+      $(document).ready(function(){
+        run_iframe(video_id, playlist_id);
 
-        const xhttp = new XMLHttpRequest();
-        xhttp.onload = function() {
-          document.getElementById("ip").innerHTML = this.responseText;
+        setInterval(function(){
+            
+          var currentdate = new Date();
+          var month = ["Januari", "Februari",  "Maret",  "April",  "Mei",  "Juni",  "Juli",  "Agustus",  "September",  "Oktober",  "November",  "Desember"];
+          document.getElementById("jam").innerHTML = currentdate.getHours() + ":" + (currentdate.getMinutes() < 10 ? "0" : "") + currentdate.getMinutes() + ":" + (currentdate.getSeconds() < 10 ? "0" : "") + currentdate.getSeconds();
+          document.getElementById("tanggal").innerHTML = currentdate.getDate() + " " + month[currentdate.getMonth()] + " " + currentdate.getFullYear();
+          const xhttp = new XMLHttpRequest();
+          xhttp.onload = function() {
+            response = JSON.parse(this.responseText);
+            
+            document.querySelector('.running-text').innerHTML = response['config']['running_text'];
+            
+            if(video_id != response['config']['video_id'] || playlist_id != response['config']['playlist_id']){
+              video_id = response['config']['video_id'];
+              playlist_id = response['config']['playlist_id'];
+              run_iframe(video_id, playlist_id);
+            }
+            
+            for(var a = 0; a<document.querySelectorAll('.deposito-label').length; a++){
+              document.querySelectorAll('.deposito-label')[a].innerHTML = response['deposito'][a]['label'];
+              document.querySelectorAll('.deposito-value')[a].innerHTML = response['deposito'][a]['value'];
+            }
+            for(var a = 0; a<document.querySelectorAll('.britama-label').length; a++){
+              document.querySelectorAll('.britama-label')[a].innerHTML = response['britama'][a]['label'];
+              document.querySelectorAll('.britama-value')[a].innerHTML = response['britama'][a]['value'];
+            }
+            for(var a = 0; a<document.querySelectorAll('.simpedes-label').length; a++){
+              document.querySelectorAll('.simpedes-label')[a].innerHTML = response['simpedes'][a]['label'];
+              document.querySelectorAll('.simpedes-value')[a].innerHTML = response['simpedes'][a]['value'];
+            }
+
+            for(var a = 0; a<document.querySelectorAll('.exchange-rate-flag').length; a++){
+
+              document.querySelectorAll('.exchange-rate-flag')[a].src = "/img/flag/"+response['exchange_rate'][a]['flag'];
+              document.querySelectorAll('.exchange-rate-currency')[a].innerHTML = response['exchange_rate'][a]['currency'];
+              document.querySelectorAll('.exchange-rate-value')[a].innerHTML = response['exchange_rate'][a]['value'];
+              document.querySelectorAll('.exchange-rate-buy')[a].innerHTML = formatMoney(response['exchange_rate'][a]['buy']);
+              document.querySelectorAll('.exchange-rate-sell')[a].innerHTML = formatMoney(response['exchange_rate'][a]['sell']);
+            }
           }
-        xhttp.open("GET", "/getip.php", true);
-        xhttp.send();
-        
-        <?php } ?>
-        // run_iframe();
-      }
-      
-      setInterval(updateTime, 1000);
+          // run_iframe("5QLF3pfZv5Q", "list=PLC6gYrTu9CFpDDQCUn1UKkLlgKFXBMk31");
+          xhttp.open("GET", "/tv/getContent.php", true);
+          xhttp.send();          
+        }, 1000);
+      });
     </script>
   </body>
 </html>
